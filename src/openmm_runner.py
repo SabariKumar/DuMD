@@ -55,3 +55,11 @@ def run_openmm(pdb_path: str,
     except:
         print(f"Encountered other error of pdb {pdb_path}! \n")
         print(e)
+
+class OpenMMArgs:
+    # Wrapper class for run_openmm arguments.
+    # Create instances from "stage" key-level input yaml dicts to set params for 
+    # each stage of the production MD pipeline.  
+    def __init__(self, param_dict: dict):
+        for key, val in param_dict.items():
+            setattr(self, key, val)   
