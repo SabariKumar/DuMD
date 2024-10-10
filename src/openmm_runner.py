@@ -3,20 +3,7 @@ from multiprocessing import Process, Pipe
 from pathlib import Path
 from time import perf_counter
 
-def run_openmm(pdb_path: str,
-               n_steps: int,
-               stage: str,
-               forcefield_file: str = 'amber14-all.xml',
-               water_file: str = 'amber14/tip3p.xml',
-               nonbondedMethod = openmm.app.PME,
-               nonbondedCutoff: int = 1,
-               constraints = openmm.HBonds,
-               integrator = openmm.LangevinMiddleIntegrator,
-               temp: int = 300,
-               friction_coeff: int = 1,
-               step_size: float = 0.002,
-               minimizeEnergy: bool = True,
-               ):
+def run_openmm(stage, openmm_args: OpenMMArgs):
     try:
         pdb = openmm.PDBFile(pdb_path)
         base = Path(pdb_path).stem
@@ -52,14 +39,15 @@ def run_openmm(pdb_path: str,
         print(f"Encountered ValueError of pdb {pdb_path}! \n")
         print(e)
 
-    except:
-        print(f"Encountered other error of pdb {pdb_path}! \n")
+    except AttributeError as e:
+        print(f"Stage {stage} is missing required a required attribute")
         print(e)
 
 class OpenMMArgs:
     # Wrapper class for run_openmm arguments.
     # Create instances from "stage" key-level input yaml dicts to set params for 
     # each stage of the production MD pipeline.  
-    def __init__(self, param_dict: dict):
+    def __init__(self, stage: str, param_dict: dict):
+        self.stage = stage
         for key, val in param_dict.items():
             setattr(self, key, val)   
