@@ -1,0 +1,43 @@
+# config.yaml
+
+prep_pdb:
+  pH: 7.0
+  add_H: True
+  water: 'TIP3P-FB'
+  unit_cell_offset: 5
+  ion_st: 0 
+
+minimization:
+  minimizeEnergy: True                    
+  n_steps: 1000
+  step_size: 0.002
+  temp: 300
+  forcefield_file: 'amber14-all.xml'
+  water_file: 'amber14/tip3p.xml'
+  nonbondedMethod: openmm.app.PME
+  nonbondedCutoff: 1
+  constraints: openmm.HBonds
+  integrator: openmm.LangevinMiddleIntegrator
+
+equilibrium:
+  n_steps: 100000
+  step_size: 0.002
+  temp: 300
+  forcefield_file: 'amber14-all.xml'
+  water_file: 'amber14/tip3p.xml'
+  nonbondedMethod: openmm.app.PME
+  nonbondedCutoff: 1
+  constraints: openmm.HBonds
+  integrator: openmm.LangevinMiddleIntegrator    
+
+production:
+  n_steps: 100000000                      
+  step_size: 0.002
+  temp: 300
+  forcefield_file: 'amber14-all.xml'
+  water_file: 'amber14/tip3p.xml'
+  nonbondedMethod: openmm.app.PME
+  nonbondedCutoff: 1
+  constraints: openmm.HBonds
+  integrator: openmm.LangevinMiddleIntegrator
+
