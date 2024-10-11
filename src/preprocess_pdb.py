@@ -10,7 +10,7 @@ import sys
 from time import perf_counter
 from tqdm import tqdm
 
-def prep_pdb(pdb_file, pH = 7.0, add_H = True, water= 'TIP3P-FB', unit_cell_offset = 5, ion_st = 0 ):
+def prep_pdb(pdb_file, stage: str, param_dict: dict) -> None: #pH = 7.0, add_H = True, water= 'TIP3P-FB', unit_cell_offset = 5, ion_st = 0 )
     start = perf_counter()
     name = pdb_file.split('.')[0] 
     #Read in the pdb, remove unwanted chains. For now, we'll only keep chains with AA residues or water.
@@ -33,21 +33,20 @@ def prep_pdb(pdb_file, pH = 7.0, add_H = True, water= 'TIP3P-FB', unit_cell_offs
     fixer.removeChains(delete_indices)
     
     #Add in missing residues/heavy atoms, replace nonstandard residues
-    spans = []
     fixer.findMissingResidues()
     fixer.findNonstandardResidues()
     fixer.replaceNonstandardResidues()
     fixer.findMissingAtoms()
     fixer.addMissingAtoms()
-    if(add_H):
-        fixer.addMissingHydrogens(pH)
+    if(param_dict['add_H']):
+        fixer.addMissingHydrogens(param_dict['pH'])
     
     #Create cubic solvent box that's 5A bigger than the biggest dimension  
     cell_dims = [max((pos[i] for pos in fixer.positions))-min((pos[i] for pos in fixer.positions)) for i in range(3)]
-    offset = [unit.Quantity(unit_cell_offset, unit.nanometer), unit.Quantity(unit_cell_offset, unit.nanometer),
-              unit.Quantity(unit_cell_offset, unit.nanometer)]
+    offset = [unit.Quantity(param_dict['unit_cell_offset'], unit.nanometer), unit.Quantity(param_dict['unit_cell_offset'], unit.nanometer),
+              unit.Quantity(param_dict['unit_cell_offset'], unit.nanometer)]
     dims = [x+y for x, y in zip(cell_dims, offset)]
-    fixer.addSolvent([x.value_in_unit(unit.nanometer) for x in dims], positiveIon='Na+', negativeIon='Cl-', ionicStrength=ion_st*unit.molar)
+    fixer.addSolvent([x.value_in_unit(unit.nanometer) for x in dims], positiveIon='Na+', negativeIon='Cl-', ionicStrength=param_dict['ion_st'] * unit.molar)
     PDBFile.writeFile(fixer.topology, fixer.positions, open(name + '_processed.pdb', 'w'))
     end = perf_counter()
     print(f'Processed pdb file {name} in {end - start} seconds')
