@@ -1,8 +1,10 @@
-DuMD: DumbMD
+### DuMD: DumbMD
+![dumd](./src/DuMD.jpeg)
+
 
 Submits SLURM jobs to mindlessly run OpenMM simulations for pdb files in a folder.
 Nonstandard amino acids, heteroatoms, and missing atoms are treated per the pdbfixer defaults.
-See runtime/config/default_nvt_config.yaml for other default run parameters. 
+See `runtime/config/default_nvt_config.yaml` for other default run parameters. 
 
 
 Developed for usage on bridges2 - modify the run_slurm_bridges.s
@@ -14,4 +16,4 @@ Usage:
    with the location for slurm output and error logs:
 
 
-find pdb_search_dir -name "*.pdb" -exec sbatch --export=PDB_FILE={} --export=SLURM_OUTPUT_DIR=/ocean/projects/che210028p/skumar7/slurm_dumps run_slurm_bridges.sh
+`find pdb_search_dir -name "*.pdb" -exec sbatch --export=PDB_FILE={} --export=SLURM_OUTPUT_DIR=/ocean/projects/che210028p/skumar7/slurm_dumps run_slurm_bridges.sh`
