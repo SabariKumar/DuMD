@@ -16,7 +16,7 @@ def run_openmm(pdb_path: Union[str, Path], stage: str, openmm_args: dict, *args,
                                          nonbondedCutoff = openmm_args['nonbondedCutoff'] * openmm.unit.nanometer,
                                          constraints = openmm_args['constraints'])
         integrator = integrator(openmm_args['temp'] * openmm.unit.kelvin, openmm_args['friction_coeff']/openmm.unit.picosecond, openmm_args['step_size'] * openmm.unit.picoseconds)
-        simulation = openmm.Simulation(pdb.topology, openmm_args['system'], openmm_args['integrator'])
+        simulation = openmm.Simulation(pdb.topology, system, openmm_args['integrator'])
         simulation.context.setPositions(pdb.positions)
         if openmm_args.minimizeEnergy:
             simulation.minimizeEnergy()
