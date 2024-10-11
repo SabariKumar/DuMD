@@ -14,4 +14,4 @@ Usage:
    with the location for slurm output and error logs:
 
 
-   find pdb_search_dir -name "*.pdb" -exec run_slurm_bridges.sh {} slurm_output_dir
+find pdb_search_dir -name "*.pdb" -exec sbatch --export=PDB_FILE={} --export=SLURM_OUTPUT_DIR=/ocean/projects/che210028p/skumar7/slurm_dumps run_slurm_bridges.sh
