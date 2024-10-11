@@ -17,3 +17,6 @@ Usage:
 
 
 `find pdb_search_dir -name "*.pdb" -exec sbatch --export=PDB_FILE={} --export=SLURM_OUTPUT_DIR=/ocean/projects/che210028p/skumar7/slurm_dumps run_slurm_bridges.sh`
+
+
+Docker container at: https://hub.docker.com/repository/docker/xygen34/dumd/general
