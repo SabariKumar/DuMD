@@ -1,9 +1,6 @@
 import argparse
-import os
 from pathlib import *
-import yaml
 import argparse
-from typing import Union
 from src.openmm_runner import OpenMMArgs, run_openmm
 from src.preprocess_pdb import prep_pdb
 
