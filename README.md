@@ -7,7 +7,7 @@ Nonstandard amino acids, heteroatoms, and missing atoms are treated per the pdbf
 See `runtime/config/default_nvt_config.yaml` for other default run parameters. 
 
 
-Developed for usage on bridges2 - modify the run_slurm_bridges.s
+Developed for usage on bridges2 - modify the run_slurm_bridges.sh to your needs.
 
 
 Usage:
