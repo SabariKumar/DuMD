@@ -50,3 +50,4 @@ def prep_pdb(pdb_file, stage: str, param_dict: dict) -> None: #pH = 7.0, add_H =
     PDBFile.writeFile(fixer.topology, fixer.positions, open(name + '_processed.pdb', 'w'))
     end = perf_counter()
     print(f'Processed pdb file {name} in {end - start} seconds')
+    return name + '_processed.pdb'

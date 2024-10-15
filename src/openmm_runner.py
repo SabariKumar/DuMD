@@ -6,17 +6,17 @@ from collections import Generator
 from typing import Union
 from time import perf_counter
 
-def run_openmm(stage: str, openmm_args: dict, *args, **kwargs) -> None:
+def run_openmm(pdb_path: Union[str, Path], stage: str, openmm_args: dict, *args, **kwargs) -> str:
     try:
-        pdb = openmm.PDBFile(openmm_args['pdb_path'])
-        base = Path(openmm_args['pdb_path']).stem
+        pdb = openmm.PDBFile(pdb_path)
+        base = Path(pdb_path).stem
         forcefield = openmm.ForceField(openmm_args['forcefield_file'], openmm_args['water_file'])
         system = forcefield.createSystem(pdb.topology,
                                          nonbondedMethod = openmm_args['nonbondedMethod'],
                                          nonbondedCutoff = openmm_args['nonbondedCutoff'] * openmm.unit.nanometer,
                                          constraints = openmm_args['constraints'])
         integrator = integrator(openmm_args['temp'] * openmm.unit.kelvin, openmm_args['friction_coeff']/openmm.unit.picosecond, openmm_args['step_size'] * openmm.unit.picoseconds)
-        simulation = openmm.Simulation(pdb.topology, openmm_args['system'], openmm_args['integrator'])
+        simulation = openmm.Simulation(pdb.topology, system, openmm_args['integrator'])
         simulation.context.setPositions(pdb.positions)
         if openmm_args.minimizeEnergy:
             simulation.minimizeEnergy()
@@ -36,6 +36,7 @@ def run_openmm(stage: str, openmm_args: dict, *args, **kwargs) -> None:
         positions = simulation.context.getState(getPositions=True).getPositions()
         openmm.PDBFile.writeFile(simulation.topology, positions,             
                           open(f'{base}_{stage}_final_pos.pdb', 'w'))
+        return '{base}_{stage}_final_pos.pdb'
 
     except ValueError as e:
         print(f"Encountered ValueError of pdb {openmm_args['pdb_path']}! \n")
