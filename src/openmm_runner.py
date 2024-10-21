@@ -1,30 +1,31 @@
 import openmm
+from openmm.app import *
 from multiprocessing import Process, Pipe
 from pathlib import Path
 import yaml
-from collections import Generator
+from collections.abc import Generator
 from typing import Union
 from time import perf_counter
 
 def run_openmm(pdb_path: Union[str, Path], stage: str, openmm_args: dict, *args, **kwargs) -> str:
     try:
-        pdb = openmm.PDBFile(pdb_path)
+        pdb = openmm.app.PDBFile(pdb_path)
         base = Path(pdb_path).stem
-        forcefield = openmm.ForceField(openmm_args['forcefield_file'], openmm_args['water_file'])
+        forcefield = openmm.app.ForceField(openmm_args['forcefield_file'], openmm_args['water_file'])
         system = forcefield.createSystem(pdb.topology,
                                          nonbondedMethod = openmm_args['nonbondedMethod'],
                                          nonbondedCutoff = openmm_args['nonbondedCutoff'] * openmm.unit.nanometer,
                                          constraints = openmm_args['constraints'])
         integrator = integrator(openmm_args['temp'] * openmm.unit.kelvin, openmm_args['friction_coeff']/openmm.unit.picosecond, openmm_args['step_size'] * openmm.unit.picoseconds)
-        simulation = openmm.Simulation(pdb.topology, system, openmm_args['integrator'])
+        simulation = openmm.app.Simulation(pdb.topology, system, openmm_args['integrator'])
         simulation.context.setPositions(pdb.positions)
         if openmm_args.minimizeEnergy:
             simulation.minimizeEnergy()
         simulation.context.setVelocitiesToTemperature(openmm_args['temp'] * openmm.unit.kelvin)
         if openmm_args.n_steps > 10000:
-            simulation.reporters.append(openmm.PDBReporter(f'{base}_{stage}.pdb', 5000))
+            simulation.reporters.append(openmm.app.PDBReporter(f'{base}_{stage}.pdb', 5000))
 
-        simulation.reporters.append(openmm.StateDataReporter('{base}_{stage}.log',
+        simulation.reporters.append(openmm.app.StateDataReporter('{base}_{stage}.log',
                                                              10000, totalSteps = openmm_args['n_steps'],
                                                              step=True, time=True, 
                                                              speed=True, progress=True,
@@ -34,12 +35,12 @@ def run_openmm(pdb_path: Union[str, Path], stage: str, openmm_args: dict, *args,
                                                              density=True, separator = "\t"))
         simulation.step(openmm_args['n_steps'])
         positions = simulation.context.getState(getPositions=True).getPositions()
-        openmm.PDBFile.writeFile(simulation.topology, positions,             
+        openmm.app.PDBFile.writeFile(simulation.topology, positions,             
                           open(f'{base}_{stage}_final_pos.pdb', 'w'))
         return '{base}_{stage}_final_pos.pdb'
 
     except ValueError as e:
-        print(f"Encountered ValueError of pdb {openmm_args['pdb_path']}! \n")
+        print(f"Encountered ValueError for pdb {pdb_path}! \n")
         print(e)
 
     except KeyError as e:

@@ -13,4 +13,4 @@
 #SBATCH --mail-user=sabarik@colostate.edu
 
 cd /ocean/projects/che210028p/skumar7/ProteinSol/topoformer 
-APPTAINER_TMPDIR=/ocean/projects/che210028p/skumar7/singularity_temp apptainer exec --nv -B /ocean/projects/che210028p/skumar7/ProteinSol/ 20240927_topoformer_fixedgrads.sif /usr/bin/python /ocean/projects/che210028p/skumar7/ProteinSol/dumd/run_simulation.py $PDB_FILE /ocean/projects/che210028p/skumar7/ProteinSol/dumd/runtime/config/config.yaml
+APPTAINER_TMPDIR=/ocean/projects/che210028p/skumar7/singularity_temp apptainer exec --nv -B /ocean/projects/che210028p/skumar7/ProteinSol/ /ocean/projects/che210028p/skumar7/ProteinSol/DuMD/20241015_dumd.sif /usr/bin/python /ocean/projects/che210028p/skumar7/ProteinSol/DuMD/run_simulation.py $PDB_FILE /ocean/projects/che210028p/skumar7/ProteinSol/DuMD/runtime/config/config.yaml

@@ -14,7 +14,7 @@ minimization:
   temp: 300
   forcefield_file: amber14-all.xml
   water_file: amber14/tip3p.xml
-  nonbondedMethod: openmm.app.PME
+  nonbondedMethod: openmm.app.forcefield.PME
   nonbondedCutoff: 1
   constraints: openmm.HBonds
   integrator: openmm.LangevinMiddleIntegrator
@@ -25,7 +25,7 @@ equilibrium:
   temp: 300
   forcefield_file: amber14-all.xml
   water_file: amber14/tip3p.xml
-  nonbondedMethod: openmm.app.PME
+  nonbondedMethod: openmm.app.forcefield.PME
   nonbondedCutoff: 1
   constraints: openmm.HBonds
   integrator: openmm.LangevinMiddleIntegrator    
@@ -36,7 +36,7 @@ production:
   temp: 300
   forcefield_file: amber14-all.xml
   water_file: amber14/tip3p.xml
-  nonbondedMethod: openmm.app.PME
+  nonbondedMethod: openmm.app.forcefield.PME
   nonbondedCutoff: 1
   constraints: openmm.HBonds
   integrator: openmm.LangevinMiddleIntegrator
