@@ -21,4 +21,4 @@ ENV PATH="/opt/conda/bin:$PATH:"
 RUN conda update --all && \
     conda install -y -c conda-forge pdbfixer openmmforcefields biopython
 ADD . .
-RUN pip install -e .
+#RUN pip install -e .
